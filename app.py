@@ -5,19 +5,17 @@ import seaborn as sns
 
 st.set_page_config(page_title="CSV EDA Dashboard", layout="wide")
 
-st.title("📊 CSV Auto EDA Dashboard")
+st.title("CSV Auto EDA Dashboard")
 st.write("Koi bhi CSV upload karo — main automatically analyse kar dunga!")
 
-# ---- FILE UPLOAD ----
-uploaded_file = st.file_uploader("📁 CSV file upload karo", type=["csv"])
+uploaded_file = st.file_uploader("CSV file upload karo", type=["csv"])
 
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
     
-    st.success("✅ File successfully load ho gayi!")
+    st.success("File successfully load ho gayi!")
     
-    # ---- BASIC INFO ----
-    st.subheader("📌 Dataset Overview")
+    st.subheader("Dataset Overview")
     col1, col2, col3 = st.columns(3)
     col1.metric("Total Rows", df.shape[0])
     col2.metric("Total Columns", df.shape[1])
@@ -25,23 +23,19 @@ if uploaded_file is not None:
     
     st.dataframe(df.head(10))  # pehli 10 rows dikhao
     
-    # ---- DATATYPES ----
-    st.subheader("🔢 Column Datatypes")
+    st.subheader("Column Datatypes")
     st.dataframe(df.dtypes.rename("DataType").reset_index().rename(columns={"index": "Column"}))
-    
-    # ---- MISSING VALUES ----
-    st.subheader("❓ Missing Values per Column")
+  
+    st.subheader("Missing Values per Column")
     missing = df.isnull().sum().reset_index()
     missing.columns = ["Column", "Missing Count"]
     missing["Missing %"] = (missing["Missing Count"] / len(df) * 100).round(2)
     st.dataframe(missing)
     
-    # ---- STATISTICS ----
-    st.subheader("📈 Descriptive Statistics")
+    st.subheader("Descriptive Statistics")
     st.dataframe(df.describe())
     
-    # ---- CHARTS ----
-    st.subheader("📊 Column-wise Analysis")
+    st.subheader("Column-wise Analysis")
     
     numeric_cols = df.select_dtypes(include='number').columns.tolist()
     categorical_cols = df.select_dtypes(include='object').columns.tolist()
@@ -66,7 +60,7 @@ if uploaded_file is not None:
     
     # Correlation Heatmap
     if len(numeric_cols) >= 2:
-        st.subheader("🔥 Correlation Heatmap")
+        st.subheader("Correlation Heatmap")
         fig3, ax3 = plt.subplots(figsize=(8, 5))
         sns.heatmap(df[numeric_cols].corr(), annot=True, cmap='coolwarm', fmt=".2f", ax=ax3)
         st.pyplot(fig3)
